@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase.js';
+import { supabase, supabaseAuth } from '../config/supabase.js';
 import { sendSuccess } from '../utils/responHelper.js';
 import { createHttpError } from '../utils/httpError.js';
 import { ROLES, ROLE_VALUES } from '../utils/enum.js';
@@ -17,10 +17,11 @@ export const AuthController = {
         throw createHttpError(400, 'Role tidak valid');
       }
 
-      const { data, error } = await supabase.auth.signUp({
+      // Pakai admin.createUser agar email_confirm: true & user_metadata terbaca oleh trigger
+      const { data, error } = await supabase.auth.admin.createUser({
         email,
         password,
-        email_confirm:true,
+        email_confirm: true,
         user_metadata: {
           name,
           phone: phone || null,
@@ -43,11 +44,8 @@ export const AuthController = {
 
       return sendSuccess(
         res,
-        {
-          user: data.user,
-          session: data.session
-        },
         'Registrasi berhasil',
+        { user: data.user },
         201
       );
     } catch (err) {
@@ -63,7 +61,7 @@ export const AuthController = {
         throw createHttpError(400, 'email dan password wajib diisi');
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabaseAuth.auth.signInWithPassword({
         email,
         password
       });
@@ -72,11 +70,11 @@ export const AuthController = {
         throw createHttpError(401, error.message);
       }
 
-      return sendSuccess(res, {
+      return sendSuccess(res, 'Login berhasil', {
         access_token: data.session?.access_token,
         refresh_token: data.session?.refresh_token,
         user: data.user
-      }, 'Login berhasil');
+      });
     } catch (err) {
       next(err);
     }
