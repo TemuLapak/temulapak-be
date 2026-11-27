@@ -1,7 +1,7 @@
 import { MsmeModel } from '../models/msmeModel.js';
 import { MSME_CATEGORIES } from '../utils/enum.js';
 import { createHttpError } from '../utils/httpError.js';
-import { sendSuccess } from '../utils/responseHelper.js';
+import { sendSuccess } from '../utils/responHelper.js';
 
 export const MsmeController = {
   async show(req, res, next) {

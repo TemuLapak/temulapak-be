@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { PaymentController } from '../controllers/paymentController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
-import { roleMiddleware } from '../middlewares/roleMiddleware.js';
+import { roleMiddleware } from '../middlewares/permissionMiddleware.js';
 import { ROLES } from '../utils/enum.js';
 
 const router = Router();

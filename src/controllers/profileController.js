@@ -1,7 +1,7 @@
 import { ProfileModel } from '../models/profileModel.js';
 import { ROLE_VALUES } from '../utils/enum.js';
 import { createHttpError } from '../utils/httpError.js';
-import { sendSuccess } from '../utils/responseHelper.js';
+import { sendSuccess } from '../utils/responHelper.js';
 
 export const ProfileController = {
   async me(req, res, next) {

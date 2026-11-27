@@ -1,7 +1,7 @@
 import { RegistrationModel } from '../models/registrationModel.js';
 import { RegistrationService } from '../services/registrationService.js';
 import { createHttpError } from '../utils/httpError.js';
-import { sendSuccess } from '../utils/responseHelper.js';
+import { sendSuccess } from '../utils/responHelper.js';
 
 export const RegistrationController = {
   async show(req, res, next) {

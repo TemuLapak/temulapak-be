@@ -1,7 +1,7 @@
 import { EventModel } from '../models/eventModel.js';
 import { EVENT_THEMES } from '../utils/enum.js';
 import { createHttpError } from '../utils/httpError.js';
-import { sendSuccess } from '../utils/responseHelper.js';
+import { sendSuccess } from '../utils/responHelper.js';
 
 export const EventController = {
   async index(req, res, next) {

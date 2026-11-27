@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ProfileController } from '../controllers/profileController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
-import { roleMiddleware, ownerOrAdminMiddleware } from '../middlewares/roleMiddleware.js';
+import { roleMiddleware, ownerOrAdminMiddleware } from '../middlewares/permissionMiddleware.js';
 import { ROLES } from '../utils/enum.js';
 
 const router = Router();

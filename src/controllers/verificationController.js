@@ -1,7 +1,7 @@
 import { VerificationModel } from '../models/verificationModel.js';
 import { VerificationService } from '../services/verificationService.js';
 import { createHttpError } from '../utils/httpError.js';
-import { sendSuccess } from '../utils/responseHelper.js';
+import { sendSuccess } from '../utils/responHelper.js';
 
 export const VerificationController = {
   async index(req, res, next) {

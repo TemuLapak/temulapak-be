@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { EventController } from '../controllers/eventController.js';
 import { EventModel } from '../models/eventModel.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
-import { roleMiddleware, ownerOrAdminMiddleware } from '../middlewares/roleMiddleware.js';
+import { roleMiddleware, ownerOrAdminMiddleware } from '../middlewares/permissionMiddleware.js';
 import { ROLES } from '../utils/enum.js';
 
 const router = Router();

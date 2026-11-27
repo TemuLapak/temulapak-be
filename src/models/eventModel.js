@@ -1,45 +1,67 @@
 import { supabase } from '../config/supabase.js';
 
-export const RegistrationModel = {
-  async findById(id) {
-    const { data, error } = await supabase
-      .from('event_registration')
+export const EventModel = {
+  async findAll({ city, province, theme } = {}) {
+    let query = supabase
+      .from('event')
       .select(`
         id,
-        msme_id,
-        event_id,
-        status,
-        registered_at,
-        msme:msme!event_registration_msme_id_fkey (
+        profile_id,
+        event_name,
+        description,
+        theme,
+        location,
+        city,
+        province,
+        start_date,
+        end_date,
+        registration_start,
+        registration_end,
+        booth_price,
+        booth_quota,
+        banner,
+        organizer:profiles!event_profile_id_fkey (
           id,
-          profile_id,
-          msme_name,
-          category,
-          city,
-          province
-        ),
-        event:event!event_registration_event_id_fkey (
+          name,
+          phone,
+          role
+        )
+      `)
+      .order('start_date', { ascending: true });
+
+    if (city) query = query.eq('city', city);
+    if (province) query = query.eq('province', province);
+    if (theme) query = query.eq('theme', theme);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+  },
+
+  async findById(id) {
+    const { data, error } = await supabase
+      .from('event')
+      .select(`
+        id,
+        profile_id,
+        event_name,
+        description,
+        theme,
+        location,
+        city,
+        province,
+        start_date,
+        end_date,
+        registration_start,
+        registration_end,
+        booth_price,
+        booth_quota,
+        banner,
+        organizer:profiles!event_profile_id_fkey (
           id,
-          profile_id,
-          event_name,
-          location,
-          city,
-          province,
-          start_date,
-          end_date,
-          booth_price,
-          booth_quota
-        ),
-        payments (
-          id,
-          amount,
-          gateway,
-          gateway_ref,
-          method,
-          status,
-          paid_at,
-          expires_at,
-          registration_id
+          name,
+          phone,
+          role
         )
       `)
       .eq('id', id)
@@ -49,106 +71,37 @@ export const RegistrationModel = {
     return data;
   },
 
-  async findByMsmeAndEvent(msmeId, eventId) {
+  async findByProfileId(profileId) {
     const { data, error } = await supabase
-      .from('event_registration')
+      .from('event')
       .select(`
         id,
-        msme_id,
-        event_id,
-        status,
-        registered_at
+        profile_id,
+        event_name,
+        description,
+        theme,
+        location,
+        city,
+        province,
+        start_date,
+        end_date,
+        registration_start,
+        registration_end,
+        booth_price,
+        booth_quota,
+        banner
       `)
-      .eq('msme_id', msmeId)
-      .eq('event_id', eventId)
-      .maybeSingle();
+      .eq('profile_id', profileId)
+      .order('start_date', { ascending: false });
 
     if (error) throw error;
     return data;
-  },
-
-  async findByMsmeId(msmeId) {
-    const { data, error } = await supabase
-      .from('event_registration')
-      .select(`
-        id,
-        msme_id,
-        event_id,
-        status,
-        registered_at,
-        event:event!event_registration_event_id_fkey (
-          id,
-          event_name,
-          theme,
-          location,
-          city,
-          province,
-          start_date,
-          end_date,
-          booth_price,
-          banner
-        ),
-        payments (
-          id,
-          amount,
-          status,
-          paid_at,
-          expires_at
-        )
-      `)
-      .eq('msme_id', msmeId)
-      .order('registered_at', { ascending: false });
-
-    if (error) throw error;
-    return data;
-  },
-
-  async findByEventId(eventId, { status } = {}) {
-    let query = supabase
-      .from('event_registration')
-      .select(`
-        id,
-        msme_id,
-        event_id,
-        status,
-        registered_at,
-        msme:msme!event_registration_msme_id_fkey (
-          id,
-          profile_id,
-          msme_name,
-          category,
-          city,
-          province
-        )
-      `)
-      .eq('event_id', eventId)
-      .order('registered_at', { ascending: true });
-
-    if (status) query = query.eq('status', status);
-
-    const { data, error } = await query;
-    if (error) throw error;
-    return data;
-  },
-
-  async countByEventId(eventId, { excludeStatuses = [] } = {}) {
-    let query = supabase
-      .from('event_registration')
-      .select('*', { count: 'exact', head: true })
-      .eq('event_id', eventId);
-
-    for (const st of excludeStatuses) {
-      query = query.neq('status', st);
-    }
-
-    const { count, error } = await query;
-    if (error) throw error;
-    return count ?? 0;
   },
 
   async create(payload) {
+    // payload: { profile_id, event_name, description, theme, location, city, province, start_date, end_date, registration_start, registration_end, booth_price, booth_quota, banner }
     const { data, error } = await supabase
-      .from('event_registration')
+      .from('event')
       .insert([payload])
       .select()
       .single();
@@ -157,15 +110,25 @@ export const RegistrationModel = {
     return data;
   },
 
-  async updateStatus(id, status) {
+  async updateById(id, payload) {
     const { data, error } = await supabase
-      .from('event_registration')
-      .update({ status })
+      .from('event')
+      .update(payload)
       .eq('id', id)
       .select()
       .single();
 
     if (error) throw error;
     return data;
+  },
+
+  async deleteById(id) {
+    const { error } = await supabase
+      .from('event')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return true;
   }
 };
