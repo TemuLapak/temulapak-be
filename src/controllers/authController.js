@@ -20,8 +20,11 @@ export const AuthController = {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: { name, role: selectedRole }
+        email_confirm:true,
+        user_metadata: {
+          name,
+          phone: phone || null,
+          role: selectedRole
         }
       });
 
