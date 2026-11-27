@@ -1,7 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { createHttpError } from './utils/httpError.js';
+import { sendSuccess } from './utils/responseHelper.js';
 
 const app = express();
 
@@ -9,23 +13,19 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/health', (req, res) => {
-  res.status(200).json({
-    success: true,
+  return sendSuccess(res, {
     message: 'TemuLapak API is running'
   });
 });
 
 app.use('/api', routes);
 
-// Tangani endpoint yang tidak terdaftar
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Endpoint tidak ditemukan'
-  });
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use((req, res, next) => {
+  next(createHttpError(404, 'Endpoint tidak ditemukan'));
 });
 
-// Middleware error handler wajib diletakkan paling akhir
 app.use(errorHandler);
 
 export default app;
