@@ -5,7 +5,7 @@ import { swaggerSpec } from './config/swagger.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { createHttpError } from './utils/httpError.js';
-import { sendSuccess } from './utils/responseHelper.js';
+import { sendSuccess } from './utils/responHelper.js';
 
 const app = express();
 
