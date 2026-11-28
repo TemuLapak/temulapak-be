@@ -12,6 +12,17 @@ export const ProfileModel = {
     return data;
   },
 
+  async findOptionalById(id) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, name, phone, role')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
   async upsert(payload) {
     const { data, error } = await supabase
       .from('profiles')
@@ -33,5 +44,5 @@ export const ProfileModel = {
 
     if (error) throw error;
     return data;
-  }
+  },
 };
