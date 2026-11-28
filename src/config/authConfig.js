@@ -7,7 +7,7 @@ export const AUTH_CONFIG = {
   OAUTH_PROMPT: 'consent',
   RECOVERY_OTP_TYPE: 'recovery',
   REDIRECT_PATHS: {
-    GOOGLE_CALLBACK: '/auth/callback',
+    GOOGLE_CALLBACK: '/callback',
     RESET_PASSWORD: '/reset-password',
   },
 };
