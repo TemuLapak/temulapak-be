@@ -67,12 +67,11 @@ export const AuthController = {
         });
       }
 
-      return sendSuccess(
-        res,
-        'Registrasi berhasil',
-        { user: data.user },
-        201
-      );
+      return sendSuccess(res, {
+        statusCode: 201,
+        message: 'Registrasi berhasil',
+        data: { user: data.user },
+      });
     } catch (err) {
       next(err);
     }
@@ -99,11 +98,14 @@ export const AuthController = {
         ? await ProfileModel.findOptionalById(data.user.id)
         : null;
 
-      return sendSuccess(res, 'Login berhasil', {
-        access_token: data.session?.access_token,
-        refresh_token: data.session?.refresh_token,
-        user: data.user,
-        profile,
+      return sendSuccess(res, {
+        message: 'Login berhasil',
+        data: {
+          access_token: data.session?.access_token,
+          refresh_token: data.session?.refresh_token,
+          user: data.user,
+          profile,
+        },
       });
     } catch (err) {
       next(err);
@@ -141,8 +143,11 @@ export const AuthController = {
         );
       }
 
-      return sendSuccess(res, 'URL autentikasi Google berhasil dibuat', {
-        url: data.url,
+      return sendSuccess(res, {
+        message: 'URL autentikasi Google berhasil dibuat',
+        data: {
+          url: data.url,
+        },
       });
     } catch (err) {
       next(err);
@@ -183,11 +188,14 @@ export const AuthController = {
         });
       }
 
-      return sendSuccess(res, 'Login Google berhasil', {
-        access_token,
-        refresh_token: refresh_token || null,
-        user: authUser,
-        profile,
+      return sendSuccess(res, {
+        message: 'Login Google berhasil',
+        data: {
+          access_token,
+          refresh_token: refresh_token || null,
+          user: authUser,
+          profile,
+        },
       });
     } catch (err) {
       next(err);
@@ -215,10 +223,10 @@ export const AuthController = {
         throw createHttpError(400, error.message);
       }
 
-      return sendSuccess(
-        res,
-        'Email konfirmasi pemulihan kata sandi telah dikirim. Silakan cek kotak masuk Anda.'
-      );
+      return sendSuccess(res, {
+        message:
+          'Email konfirmasi pemulihan kata sandi telah dikirim. Silakan cek kotak masuk Anda.',
+      });
     } catch (err) {
       next(err);
     }
@@ -244,14 +252,18 @@ export const AuthController = {
         if (error || !data?.session?.access_token) {
           throw createHttpError(
             401,
-            error?.message || 'Tautan konfirmasi email tidak valid atau kedaluwarsa'
+            error?.message ||
+              'Tautan konfirmasi email tidak valid atau kedaluwarsa'
           );
         }
 
-        return sendSuccess(res, 'Konfirmasi email berhasil diverifikasi', {
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-          user: data.user,
+        return sendSuccess(res, {
+          message: 'Konfirmasi email berhasil diverifikasi',
+          data: {
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+            user: data.user,
+          },
         });
       }
 
@@ -266,9 +278,12 @@ export const AuthController = {
         );
       }
 
-      return sendSuccess(res, 'Konfirmasi email berhasil diverifikasi', {
-        access_token,
-        user: userData.user,
+      return sendSuccess(res, {
+        message: 'Konfirmasi email berhasil diverifikasi',
+        data: {
+          access_token,
+          user: userData.user,
+        },
       });
     } catch (err) {
       next(err);
@@ -313,7 +328,9 @@ export const AuthController = {
         throw createHttpError(400, updateError.message);
       }
 
-      return sendSuccess(res, 'Kata sandi berhasil diperbarui');
+      return sendSuccess(res, {
+        message: 'Kata sandi berhasil diperbarui',
+      });
     } catch (err) {
       next(err);
     }
